@@ -23,12 +23,18 @@ mod nix_netrc;
 mod push;
 mod version;
 
+use std::process::exit;
+
 use anyhow::Result;
 
 #[tokio::main]
 async fn main() -> Result<()> {
     init_logging()?;
-    cli::run().await
+    if let Err(err) = cli::run().await {
+        println!("Error in main: {err}");
+        exit(1);
+    }
+    Ok(())
 }
 
 fn init_logging() -> Result<()> {
